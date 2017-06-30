@@ -140,7 +140,7 @@
     NSURL *appRedirectURL = [NSURL URLWithString:appRedirectPath];
     
     BOOL identicalURLSchemes = [appRedirectURL.scheme isEqual:url.scheme];
-    BOOL identicalURLHosts = [appRedirectURL.host isEqual:url.host];
+    BOOL identicalURLHosts = [appRedirectURL.host.lowercaseString isEqual:url.host.lowercaseString];
     // For app:// base URL, the host is nil.
     BOOL isAppURL = (BOOL)(appRedirectURL.host == nil);
     if (!identicalURLSchemes || (!isAppURL && !identicalURLHosts)) {
@@ -180,9 +180,7 @@
 {    
     NSHTTPCookieStorage *storage = [NSHTTPCookieStorage sharedHTTPCookieStorage];
     [[storage cookies] enumerateObjectsUsingBlock:^(NSHTTPCookie *cookie, NSUInteger idx, BOOL *stop) {
-        if ([cookie.domain rangeOfString:@"instagram.com"].location != NSNotFound) {
-            [storage deleteCookie:cookie];
-        }
+        [storage deleteCookie:cookie];
     }];
     
     self.accessToken = nil;
